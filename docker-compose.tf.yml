@@ -1,0 +1,9 @@
+version: '2'
+services:
+  tf:
+    image: '155964518584.dkr.ecr.us-west-2.amazonaws.com/nn-trainer:latest'
+    mem_limit: 8g
+    volumes:
+      - /home/outernets/data:/workspace
+    ports:
+      - 5900:8888

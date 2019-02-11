@@ -1,0 +1,23 @@
+[Unit]
+Description=outernets-cv
+After=outernets-docker.service outernets-ffmpeg.service nvidia-docker.service
+Requires=outernets-docker.service outernets-ffmpeg.service
+Wants=nvidia-docker.service
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/home/outernets/bin
+
+User=outernets
+Group=outernets
+
+StandardOutput=null
+StandardError=null
+
+ExecStartPre=/bin/bash -c '/usr/bin/nvidia-docker run --rm --name setup-nvidia-driver $(/usr/bin/docker images -q 155964518584.dkr.ecr.us-west-2.amazonaws.com/nn-trainer | head -n 1) bash'
+ExecStart=/usr/bin/docker-compose -f docker-compose.tf.yml up
+ExecStop=/usr/bin/docker-compose -f docker-compose.tf.yml down
+
+[Install]
+WantedBy=multi-user.target
